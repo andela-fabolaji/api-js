@@ -33,8 +33,9 @@ read.question('Api token: ', function(apiToken) {
             console.log('1. Post Data');
 
             agent
-            .get('https://got-quotes.herokuapp.com/quotes')
-            .end(function(err, res) {
+                .get('https://got-quotes.herokuapp.com/quotes')
+                .end(function(err, res) {
+                
                 var body = res.body;
 
                 var title = body.character;
@@ -50,7 +51,9 @@ read.question('Api token: ', function(apiToken) {
                         'publishStatus':'draft'
                     })
                     .end(function(err, res) {
-                        console.log(res);
+                        if (res.body.data) {
+                            console.log('Successfully posted a quote to your medium account');
+                        }
                     });
             });
 
