@@ -1,0 +1,27 @@
+{
+  "name": "api-js",
+  "version": "1.0.0",
+  "description": "A javascript api test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/femipixels/api-js.git"
+  },
+  "keywords": [
+    "api",
+    "js"
+  ],
+  "author": "Abolaji Femi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/femipixels/api-js/issues"
+  },
+  "homepage": "https://github.com/femipixels/api-js#readme",
+  "dependencies": {
+    "request": "^2.74.0",
+    "superagent": "^2.2.0"
+  }
+}
