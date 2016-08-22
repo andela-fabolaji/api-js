@@ -35,9 +35,23 @@ read.question('Api token: ', function(apiToken) {
             agent
             .get('https://got-quotes.herokuapp.com/quotes')
             .end(function(err, res) {
-                console.log(res.body.quote);
+                var body = res.body;
 
-                var 
+                var title = body.character;
+                var content = body.quote;
+
+                agent
+                    .post('https://api.medium.com/v1/users/'+id+'/posts')
+                    .set('Authorization', 'Bearer ' + apiToken)
+                    .send({
+                        'title': title,
+                        'contentFormat':'html',
+                        'content': content,
+                        'publishStatus':'draft'
+                    })
+                    .end(function(err, res) {
+                        console.log(res);
+                    });
             });
 
         });    
@@ -45,6 +59,3 @@ read.question('Api token: ', function(apiToken) {
 
     read.close();
 });
-
-
-
