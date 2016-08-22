@@ -1,2 +1,2 @@
 # api-js
-An api created using js
+A node command line app that consumes medium api
