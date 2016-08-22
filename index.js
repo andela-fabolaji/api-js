@@ -32,9 +32,12 @@ read.question('Api token: ', function(apiToken) {
             console.log('What would you like to do?');
             console.log('1. Post Data');
 
-            read.question('', (option) => {
-                console.log('You chose ', option);
-                read.close();
+            agent
+            .get('https://got-quotes.herokuapp.com/quotes')
+            .end(function(err, res) {
+                console.log(res.body.quote);
+
+                var 
             });
 
         });    
