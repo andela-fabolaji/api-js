@@ -1,5 +1,8 @@
+var Key = require('./key');
 var readline = require('readline');
 var agent = require('superagent');
+var apiKey = new Key();
+var token = apiKey.key;
 
 var read = readline.createInterface({
     input: process.stdin,
@@ -14,7 +17,7 @@ console.log('---------------------------------------------')
 // Authenticate user
 console.log('Authentication: Please enter your api-key');
 
-read.question('Api token: ', function(token) {
+read.question('Api token: ', function(key) {
     
     agent
         .get('https://api.medium.com/v1/me')
@@ -39,7 +42,7 @@ read.question('Api token: ', function(token) {
                     console.log('---------------------------------------------');
 
                     var medium = new MediumConsume();
-                    medium.viewPublications(id, token);
+                    medium.viewPublications(id, key);
                 } else if (answer == 2) {
                     console.log('---------------------------------------------');
                     console.log('Write A STORY');
@@ -49,7 +52,7 @@ read.question('Api token: ', function(token) {
                         read.question('What\'s the content of your story? ', function(content) {
                             
                             var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, token);
+                            medium.postAStory(title, content, id, key);
 
                         });
                
@@ -67,7 +70,7 @@ read.question('Api token: ', function(token) {
                             var content = body.quote;
 
                             var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, token);
+                            medium.postAStory(title, content, id, key);
                         });
 
                 } else {
@@ -82,7 +85,7 @@ read.question('Api token: ', function(token) {
 
 function MediumConsume() {
 
-    this.viewPublications  = function(id, token) {
+    this.viewPublications  = function(id, key) {
         agent
             .get('https://api.medium.com/v1/users/'+id+'/publications')
             .set('Authorization', 'Bearer ' + token)
