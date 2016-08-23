@@ -88,7 +88,7 @@ function MediumConsume() {
     this.viewPublications  = function(id, key) {
         agent
             .get('https://api.medium.com/v1/users/'+id+'/publications')
-            .set('Authorization', 'Bearer ' + key)
+            .set('Authorization', 'Bearer ' + token)
             .end(function(err, res) {
                 var data = res.body.data;
                 var count = 0;
@@ -104,7 +104,7 @@ function MediumConsume() {
     this.postAStory = function(title, content, id, key) {
         agent
             .post('https://api.medium.com/v1/users/'+id+'/posts')
-            .set('Authorization', 'Bearer ' + key)
+            .set('Authorization', 'Bearer ' + token)
             .send({
                         'title': title,
                         'contentFormat':'html',
