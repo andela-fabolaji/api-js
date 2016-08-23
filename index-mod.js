@@ -4,7 +4,7 @@ var agent = require('superagent');
 var apiKey = new Key();
 var token = apiKey.key;
 
-const read = readline.createInterface({
+var read = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });

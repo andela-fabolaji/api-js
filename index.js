@@ -1,10 +1,7 @@
-var Key = require('./key');
 var readline = require('readline');
 var agent = require('superagent');
-var apiKey = new Key();
-var token = apiKey.key;
 
-const read = readline.createInterface({
+var read = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
@@ -17,7 +14,7 @@ console.log('---------------------------------------------')
 // Authenticate user
 console.log('Authentication: Please enter your api-key');
 
-read.question('Api token: ', function(key) {
+read.question('Api token: ', function(token) {
     
     agent
         .get('https://api.medium.com/v1/me')
@@ -42,7 +39,7 @@ read.question('Api token: ', function(key) {
                     console.log('---------------------------------------------');
 
                     var medium = new MediumConsume();
-                    medium.viewPublications(id, key);
+                    medium.viewPublications(id, token);
                 } else if (answer == 2) {
                     console.log('---------------------------------------------');
                     console.log('Write A STORY');
@@ -52,7 +49,7 @@ read.question('Api token: ', function(key) {
                         read.question('What\'s the content of your story? ', function(content) {
                             
                             var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, key);
+                            medium.postAStory(title, content, id, token);
 
                         });
                
@@ -70,7 +67,7 @@ read.question('Api token: ', function(key) {
                             var content = body.quote;
 
                             var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, key);
+                            medium.postAStory(title, content, id, token);
                         });
 
                 } else {
@@ -85,10 +82,10 @@ read.question('Api token: ', function(key) {
 
 function MediumConsume() {
 
-    this.viewPublications  = function(id, key) {
+    this.viewPublications  = function(id, token) {
         agent
             .get('https://api.medium.com/v1/users/'+id+'/publications')
-            .set('Authorization', 'Bearer ' + key)
+            .set('Authorization', 'Bearer ' + token)
             .end(function(err, res) {
                 var data = res.body.data;
                 var count = 0;
@@ -104,7 +101,7 @@ function MediumConsume() {
     this.postAStory = function(title, content, id, key) {
         agent
             .post('https://api.medium.com/v1/users/'+id+'/posts')
-            .set('Authorization', 'Bearer ' + key)
+            .set('Authorization', 'Bearer ' + token)
             .send({
                         'title': title,
                         'contentFormat':'html',
