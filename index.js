@@ -29,36 +29,90 @@ read.question('Api token: ', function(apiToken) {
             console.log('Name: ', name);
             console.log('id:   ', id);
             console.log('---------------------------------------------');
-            console.log('What would you like to do?');
-            console.log('1. Post Data');
+            console.log('What would you like to do?\n1. View Publications\n2. Write a story\n3. Post a random Story\n');
 
-            agent
-                .get('https://got-quotes.herokuapp.com/quotes')
-                .end(function(err, res) {
-                
-                var body = res.body;
+            read.question('Enter your answer: ', function(answer) {
+                console.log(answer);
+                if (answer == 1) {
+                    console.log('---------------------------------------------');
+                    console.log('VIEW PUBLICATIONS');
+                    console.log('---------------------------------------------');
 
-                var title = body.character;
-                var content = body.quote;
+                    var medium = new MediumConsume();
+                    medium.viewPublications(id, apiToken);
+                } else if (answer == 2) {
+                    console.log('---------------------------------------------');
+                    console.log('Write A STORY');
+                    console.log('---------------------------------------------');                    
 
-                agent
-                    .post('https://api.medium.com/v1/users/'+id+'/posts')
-                    .set('Authorization', 'Bearer ' + apiToken)
-                    .send({
+                    read.question('What\'s the title of your story? ', function(title) {
+                        read.question('What\'s the content of your story? ', function(content) {
+                            
+                            var medium = new MediumConsume();
+                            medium.postAStory(title, content, id, apiToken);
+
+                        });
+               
+                    });
+                } else if (answer == 3) {
+                    console.log('---------------------------------------------');
+                    console.log('POST A RANDOM STORY STORY');
+                    console.log('---------------------------------------------'); 
+                    
+                    agent
+                        .get('https://got-quotes.herokuapp.com/quotes')
+                        .end(function(err, res) {
+                            var body = res.body;
+                            var title = body.character;
+                            var content = body.quote;
+
+                            var medium = new MediumConsume();
+                            medium.postAStory(title, content, id, apiToken);
+                        });
+
+                } else {
+                    console.log('This is not a jolking sturv - Falz the Bad Guy');
+                }
+            });
+
+    });    
+    
+});
+
+
+function MediumConsume() {
+
+    this.viewPublications  = function(id, apiToken) {
+        agent
+            .get('https://api.medium.com/v1/users/'+id+'/publications')
+            .set('Authorization', 'Bearer ' + apiToken)
+            .end(function(err, res) {
+                var data = res.body.data;
+                var count = 0;
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i].name);
+                    console.log(data[i].description + '\n');
+                    count++;
+                }
+                console.log('\nYou have '+count+' publications');
+            });
+    };
+
+    this.postAStory = function(title, content, id, apiToken) {
+        agent
+            .post('https://api.medium.com/v1/users/'+id+'/posts')
+            .set('Authorization', 'Bearer ' + apiToken)
+            .send({
                         'title': title,
                         'contentFormat':'html',
                         'content': content,
                         'publishStatus':'draft'
                     })
-                    .end(function(err, res) {
-                        if (res.body.data) {
-                            console.log('Successfully posted a quote to your medium account');
-                        }
-                    });
+            .end(function(err, res) {
+                if(res.body.data) {
+                    console.log('Story posted successfully');
+                }
             });
+    };
+}
 
-        });    
-    
-
-    read.close();
-});
