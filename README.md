@@ -3,10 +3,13 @@ A light weight node script that consumes medium api
 
 ### Functionalities
 ****
+  
   #### View publications: 
   view user-subscribed publications
+  
   #### Write a story: 
   Create a new draft story for your medium account
+  
   #### Post a random story: 
   Post a story from [GOT quotes](https://got-quotes.herokuapp.com/quotes)
 
