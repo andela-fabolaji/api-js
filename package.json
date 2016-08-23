@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/femipixels/api-js#readme",
   "dependencies": {
+    "dotenv": "^2.0.0",
     "request": "^2.74.0",
     "superagent": "^2.2.0"
   }
