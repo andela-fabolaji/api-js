@@ -1,8 +1,7 @@
-var Key = require('./key');
 var readline = require('readline');
 var agent = require('superagent');
-var apiKey = new Key();
-var token = apiKey.key;
+var Key = require('./key');
+var token = new Key().key;
 
 var read = readline.createInterface({
     input: process.stdin,
@@ -13,79 +12,72 @@ var read = readline.createInterface({
 console.log('---------------------------------------------')
 console.log('Welcome to Medium api consumer');
 console.log('---------------------------------------------')
-
-// Authenticate user
-console.log('Authentication: Please enter your api-key');
-
-read.question('Api token: ', function(key) {
     
-    agent
-        .get('https://api.medium.com/v1/me')
-        .set('Authorization', 'Bearer ' + token)
-        .end(function(err, res){
-            
-            var body = res.body;
-            var name = body.data.name;
-            var id = body.data.id;
-            
-            console.log('---------------------------------------------');
-            console.log('Name: ', name);
-            console.log('id:   ', id);
-            console.log('---------------------------------------------');
-            console.log('What would you like to do?\n1. View Publications\n2. Write a story\n3. Post a random Story\n');
+agent
+    .get('https://api.medium.com/v1/me')
+    .set('Authorization', 'Bearer ' + token)
+    .end(function(err, res){
+        
+        var body = res.body;
+        var name = body.data.name;
+        var id = body.data.id;
+        
+        console.log('---------------------------------------------');
+        console.log('Name: ', name);
+        console.log('id:   ', id);
+        console.log('---------------------------------------------');
+        console.log('What would you like to do?\n1. View Publications\n2. Write a story\n3. Post a random Story\n');
 
-            read.question('Enter your answer: ', function(answer) {
-                console.log(answer);
-                if (answer == 1) {
-                    console.log('---------------------------------------------');
-                    console.log('VIEW PUBLICATIONS');
-                    console.log('---------------------------------------------');
+        read.question('Enter your answer: ', function(answer) {
+            console.log(answer);
+            if (answer == 1) {
+                console.log('---------------------------------------------');
+                console.log('VIEW PUBLICATIONS');
+                console.log('---------------------------------------------');
 
-                    var medium = new MediumConsume();
-                    medium.viewPublications(id, key);
-                } else if (answer == 2) {
-                    console.log('---------------------------------------------');
-                    console.log('Write A STORY');
-                    console.log('---------------------------------------------');                    
+                var medium = new MediumConsume();
+                medium.viewPublications(id, token);
+            } else if (answer == 2) {
+                console.log('---------------------------------------------');
+                console.log('Write A STORY');
+                console.log('---------------------------------------------');                    
 
-                    read.question('What\'s the title of your story? ', function(title) {
-                        read.question('What\'s the content of your story? ', function(content) {
-                            
-                            var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, key);
+                read.question('What\'s the title of your story? ', function(title) {
+                    read.question('What\'s the content of your story? ', function(content) {
+                        
+                        var medium = new MediumConsume();
+                        medium.postAStory(title, content, id, token);
 
-                        });
-               
                     });
-                } else if (answer == 3) {
-                    console.log('---------------------------------------------');
-                    console.log('POST A RANDOM STORY STORY');
-                    console.log('---------------------------------------------'); 
-                    
-                    agent
-                        .get('https://got-quotes.herokuapp.com/quotes')
-                        .end(function(err, res) {
-                            var body = res.body;
-                            var title = body.character;
-                            var content = body.quote;
+           
+                });
+            } else if (answer == 3) {
+                console.log('---------------------------------------------');
+                console.log('POST A RANDOM STORY STORY');
+                console.log('---------------------------------------------'); 
+                
+                agent
+                    .get('https://got-quotes.herokuapp.com/quotes')
+                    .end(function(err, res) {
+                        var body = res.body;
+                        var title = body.character;
+                        var content = body.quote;
 
-                            var medium = new MediumConsume();
-                            medium.postAStory(title, content, id, key);
-                        });
+                        var medium = new MediumConsume();
+                        medium.postAStory(title, content, id, token);
+                    });
 
-                } else {
-                    console.log('This is not a jolking sturv - Falz the Bad Guy');
-                }
-            });
+            } else {
+                console.log('This is not a jolking sturv - Falz the Bad Guy');
+            }
+        });
 
-    });    
-    
-});
+});    
 
 
 function MediumConsume() {
 
-    this.viewPublications  = function(id, key) {
+    this.viewPublications  = function(id, token) {
         agent
             .get('https://api.medium.com/v1/users/'+id+'/publications')
             .set('Authorization', 'Bearer ' + token)
@@ -101,7 +93,7 @@ function MediumConsume() {
             });
     };
 
-    this.postAStory = function(title, content, id, key) {
+    this.postAStory = function(title, content, id, token) {
         agent
             .post('https://api.medium.com/v1/users/'+id+'/posts')
             .set('Authorization', 'Bearer ' + token)
